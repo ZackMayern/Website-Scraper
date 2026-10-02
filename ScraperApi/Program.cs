@@ -14,6 +14,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<ScraperService>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options => options.AddPolicy("FrontendDevelopment", policy =>
+        policy.WithOrigins("http://localhost:4200")
+            .WithMethods("GET")
+            .AllowAnyHeader()));
+}
+
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoConnectionString));
 builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
     serviceProvider.GetRequiredService<IMongoClient>().GetDatabase("scraper_db"));
@@ -28,6 +36,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("FrontendDevelopment");
 }
 
 // Redirect HTTP traffic to HTTPS, map the API controllers, and expose a lightweight health check.

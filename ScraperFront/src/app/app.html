@@ -1,0 +1,102 @@
+<div class="dashboard-shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Scraper Desk home">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>SCRAPER <strong>DESK</strong></span>
+    </a>
+    <div class="topbar-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Listings monitor</span>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <section class="page-heading" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">COLLECTION / GAMES</p>
+        <h1 id="page-title">Game listings</h1>
+        <p class="page-description">A live view of the listings collected by ScraperApi.</p>
+      </div>
+      <button class="refresh-button" type="button" (click)="loadListings()" [disabled]="isLoading()">
+        <span class="refresh-icon" [class.spinning]="isLoading()" aria-hidden="true">↻</span>
+        {{ isLoading() ? 'Refreshing' : 'Refresh' }}
+      </button>
+    </section>
+
+    <section class="metrics" aria-label="Listing summary">
+      <div class="metric">
+        <span class="metric-label">TOTAL LISTINGS</span>
+        <strong>{{ totalListings() }}</strong>
+        <span class="metric-note">in the collection</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">LOADED HERE</span>
+        <strong>{{ listings().length }}</strong>
+        <span class="metric-note">up to 100 most recent</span>
+      </div>
+      <div class="metric metric-accent">
+        <span class="metric-label">GENRES FOUND</span>
+        <strong>{{ genreCount() }}</strong>
+        <span class="metric-note">across loaded listings</span>
+      </div>
+    </section>
+
+    <section class="listings-section" aria-labelledby="listings-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="listings-title">All listings</h2>
+          <p>Sort and filter the collected game data.</p>
+        </div>
+        @if (isLoading() && listings().length > 0) {
+          <span class="updating-label"><span class="status-dot"></span>Updating data</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <div class="message-state error-state" role="alert">
+          <span class="message-symbol" aria-hidden="true">!</span>
+          <div>
+            <strong>Listings unavailable</strong>
+            <p>{{ errorMessage() }}</p>
+          </div>
+          <button type="button" class="text-button" (click)="loadListings()">Try again</button>
+        </div>
+      } @else if (isLoading() && listings().length === 0) {
+        <div class="message-state" role="status">
+          <span class="loading-indicator" aria-hidden="true"></span>
+          <div>
+            <strong>Loading listings</strong>
+            <p>Connecting to ScraperApi…</p>
+          </div>
+        </div>
+      } @else if (listings().length === 0) {
+        <div class="message-state">
+          <span class="message-symbol" aria-hidden="true">—</span>
+          <div>
+            <strong>No listings yet</strong>
+            <p>The API is reachable, but the collection is empty.</p>
+          </div>
+        </div>
+      } @else {
+        <div class="grid-frame">
+          <ag-grid-angular
+            class="listings-grid"
+            [theme]="gridTheme"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [rowData]="listings()"
+            [rowHeight]="64"
+            [pagination]="true"
+            [paginationPageSize]="20"
+            [paginationPageSizeSelector]="[20, 50, 100]"
+            [tooltipShowDelay]="500"
+          />
+        </div>
+      }
+      <footer class="section-footer">
+        <span>DATA SOURCE <strong>ScraperApi</strong></span>
+        <span>MAX 100 ROWS LOADED</span>
+      </footer>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,43 @@
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	min-width: 320px;
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	background: #f6f7f2;
+	color: #28352e;
+	font-family: 'DM Sans', sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+button {
+	font: inherit;
+}
+
+.listings-grid .ag-cell.description-cell .ag-cell-value {
+	width: 100%;
+	min-width: 0;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+	white-space: normal;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+}
+
+.listings-grid .ag-cell {
+	padding-block: 4px;
+	padding-inline: 12px;
+}
+
+.listings-grid .ag-body-viewport,
+.listings-grid .ag-body-vertical-scroll-viewport {
+	overscroll-behavior: contain;
+}
